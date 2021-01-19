@@ -9,6 +9,8 @@
 #include <SDL.h>
 #include <SDL2_gfxPrimitives.h>
 #include "utils.h"
+#include "laser-beam.h"
+#include "board.h"
 
 typedef enum {
     TRIANGLE,
@@ -20,19 +22,6 @@ typedef enum {
     LASER,
     KING
 } pieces_t;
-
-typedef struct structBoard {
-    int x;
-    int y;
-    int width;
-    int height;
-
-    int blockWidth;
-    int blockHeight;
-    int blockPadding;
-
-    SDL_Renderer* renderer;
-} Board;
 
 typedef enum {
     PLAYER1,
@@ -48,9 +37,16 @@ typedef struct StructPiece {
     Player* player;
     Vector2 location;
     int rotation;
-    bool isActive;
     pieces_t type;
+    bool isActive;
 } Piece;
+
+typedef struct StructMove {
+    Vector2 startPos;
+    Vector2 endPos;
+    bool willCapture;
+    Piece* capturedPiece;
+} Move;
 
 typedef struct StructGameState {
     Player* players;
@@ -65,26 +61,29 @@ typedef struct StructGameState {
 
     bool isPieceSelected;
     Piece* selectedPiece;
-} GameState;
+    bool isPieceRotating;
+    int startingRotation;
 
-// Drawing Functions
-void drawBoard(Board* b, GameState* gs);
-void drawPiece(Board* b, Piece* piece);
-void drawTriangle(Vector2 p1, Vector2 p2, SDL_Color color, int rotation, struct SDL_Renderer* renderer);
-void drawDiagonal(Vector2 p1, Vector2 p2, SDL_Color color, int rotation, struct SDL_Renderer* renderer);
-void drawBlock(Vector2 p1, Vector2 p2, SDL_Color color, int rotation, struct SDL_Renderer* renderer);
-void drawStraight(Vector2 p1, Vector2 p2, SDL_Color color, int rotation, struct SDL_Renderer* renderer);
-void drawSplitter(Vector2 p1, Vector2 p2, SDL_Color color, int rotation, struct SDL_Renderer* renderer);
-void drawHypercube(Vector2 p1, Vector2 p2, struct SDL_Color color, int rotation, struct SDL_Renderer* renderer);
-void drawLaser(Vector2 p1, Vector2 p2, SDL_Color color, int rotation, struct SDL_Renderer* renderer);
-void drawKing(Vector2 p1, Vector2 p2, SDL_Color color, int rotation, struct SDL_Renderer* renderer);
+    bool isLaserOn;
+    bool hasLaserFiredThisTurn;
+//    Vector2 laserPath[9][9];
+    Beam *beam;
+} GameState;
 
 // Utility Functions
 bool getTileUnder(Board* b, Vector2 p, Vector2* tile);
 void getBoxFromTile(Board* b, Vector2 tile, Vector2* p1, Vector2* p2);
-bool getPieceOnTile(GameState* gs, Vector2 tile, Piece* piece);
+bool getPieceOnTile(GameState* gs, Vector2 tile, Piece** piece);
+bool isValidTile(Vector2 tile);
 
 // Gameplay Functions
 void endTurn(GameState* gs);
+void endMove(GameState* gs);
+void rotatePiece(GameState* gs);
+void commitPieceRotation(GameState* gs);
+void cancelPieceRotation(GameState* gs);
+void fireLaser(GameState* gs, Board* board);
+void turnLaserOff(GameState* gs);
+size_t getValidMoves(GameState* gs, Piece* piece, Move* moves);
 
 #endif //LASER_CHESS_C_LASER_CHESS_H

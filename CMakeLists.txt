@@ -17,5 +17,7 @@ include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_gfx_INCLUDE_DIRS})
 link_directories(${SDL2_LIBRARY_DIRS} ${SDL2_gfx_LIBRARY_DIRS})
 #link_directories(/usr/local/lib)
 
-add_executable(laser_chess_c main.c laser-chess.c utils.c)
+add_executable(laser_chess_c main.c laser-chess.c utils.c drawing.c laser-beam.c)
 target_link_libraries(laser_chess_c ${SDL2_gfx_LIBRARIES})
+
+add_executable(list-test tests/listtest.c linked-list.c)

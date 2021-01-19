@@ -54,6 +54,17 @@ void getBoxRefPoints(Vector2 p1, Vector2 p2, float margin, Vector2* refPoints, i
     refPoints[8] = (Vector2){xCenter, yCenter};
 }
 
+Vector2 addVector2(Vector2 a, Vector2 b) {
+    return (Vector2){a.x + b.x, a.y + b.y};
+}
+
+bool hasDirectionVector2(Vector2 a) {
+    if(a.x != 0 || a.y !=0) {
+        return true;
+    }
+    return false;
+}
+
 SDL_Color adjustColorBrightness(struct SDL_Color color, float scale) {
     struct SDL_Color diff;
 

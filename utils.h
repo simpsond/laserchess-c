@@ -3,6 +3,7 @@
 //
 
 #include <math.h>
+#include <stdbool.h>
 #include <SDL.h>
 
 #define degToRad(angleInDegrees) ((angleInDegrees) * M_PI / 180.0)
@@ -20,8 +21,10 @@ typedef struct structVector2 {
 
 Vector2 rotate(Vector2 point, Vector2 origin, int degrees);
 void rotatePoints(Vector2* points, Vector2 origin, int size, int degrees);
-
 void getBoxRefPoints(Vector2 p1, Vector2 p2, float margin, Vector2* refPoints, int size);
+
+Vector2 addVector2(Vector2 a, Vector2 b);
+bool hasDirectionVector2(Vector2 a);
 
 SDL_Color adjustColorBrightness(struct SDL_Color color, float scale);
 

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "laser-chess.h"
+#include "drawing.h"
 #include <SDL.h>
 #include <stdbool.h>
 
@@ -38,6 +39,9 @@ int main() {
         exit(1);
     }
 
+    board.tileXCount = 9;
+    board.tileYCount = 9;
+
     board.x = 10;
     board.y = 10;
     board.width = 720; // 495 is divisible by 9
@@ -61,10 +65,15 @@ void render(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 0xcc, 0xcc, 0xcc, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
-    drawBoard(&board, &gameState);
+    drawBoard(&board);
+    drawBoardHighlights(&board, &gameState);
 
     for(int i = 0; i < MAXPIECES; i++) {
         drawPiece(&board, &pieces[i]);
+    }
+
+    if(gameState.isLaserOn) {
+        drawLaserBeam(&board, &gameState, renderer);
     }
 
     renderStatus();
@@ -107,9 +116,29 @@ void mainLoop() {
                     case '`':
                         printf("player is skipping turn\n");
                         endTurn(&gameState);
-
+                        break;
+                    case 'r':
+                        printf("rotating piece");
+                        rotatePiece(&gameState);
+                        break;
+                    case SDLK_RETURN:
+                        printf("return key pressed\n");
+                        if(gameState.isPieceRotating) {
+                            commitPieceRotation(&gameState);
+                        }
+                        break;
+                    case SDLK_SPACE:
+                        if(!gameState.isLaserOn) {
+                        printf("space bar, let's fire a laser\n");
+                        if(gameState.isPieceSelected && gameState.selectedPiece->type == LASER) {
+                            fireLaser(&gameState, &board);
+                        }
+                        } else {
+                            turnLaserOff(&gameState);
+                        }
+                        break;
                 }
-                printf("key press is: %c\n", event.key.keysym.sym);
+//                printf("key press is: %c\n", event.key.keysym.sym);
             }
 
             if(event.type == SDL_MOUSEMOTION) {
@@ -127,45 +156,45 @@ void mainLoop() {
 void placePieces() {
     Piece* p_ptr = pieces;
 
-    *p_ptr++ = (Piece) {&players[0], {0, 0}, 90, TRIANGLE};
-    *p_ptr++ = (Piece) {&players[0], {1, 0}, 90, TRIANGLE};
-    *p_ptr++ = (Piece) {&players[0], {2, 0}, 0, DIAGONAL};
-    *p_ptr++ = (Piece) {&players[0], {3, 0}, 180, LASER};
-    *p_ptr++ = (Piece) {&players[0], {4, 0}, 0, KING};
-    *p_ptr++ = (Piece) {&players[0], {5, 0}, 0, HYPERCUBE};
-    *p_ptr++ = (Piece) {&players[0], {6, 0}, 90, DIAGONAL};
-    *p_ptr++ = (Piece) {&players[0], {7, 0}, 180, TRIANGLE};
-    *p_ptr++ = (Piece) {&players[0], {8, 0}, 180, TRIANGLE};
+    *p_ptr++ = (Piece) {&players[0], {0, 0}, 90, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[0], {1, 0}, 90, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[0], {2, 0}, 0, DIAGONAL, true};
+    *p_ptr++ = (Piece) {&players[0], {3, 0}, 180, LASER, true};
+    *p_ptr++ = (Piece) {&players[0], {4, 0}, 0, KING, true};
+    *p_ptr++ = (Piece) {&players[0], {5, 0}, 0, HYPERCUBE, true};
+    *p_ptr++ = (Piece) {&players[0], {6, 0}, 90, DIAGONAL, true};
+    *p_ptr++ = (Piece) {&players[0], {7, 0}, 180, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[0], {8, 0}, 180, TRIANGLE, true};
 
-    *p_ptr++ = (Piece) {&players[0], {0, 1}, 180, TRIANGLE};
-    *p_ptr++ = (Piece) {&players[0], {1, 1}, 180, BLOCK};
-    *p_ptr++ = (Piece) {&players[0], {2, 1}, 180, BLOCK};
-    *p_ptr++ = (Piece) {&players[0], {3, 1}, 0, SPLITTER};
-    *p_ptr++ = (Piece) {&players[0], {4, 1}, 90, STRAIGHT};
-    *p_ptr++ = (Piece) {&players[0], {5, 1}, 0, STRAIGHT};
-    *p_ptr++ = (Piece) {&players[0], {6, 1}, 180, BLOCK};
-    *p_ptr++ = (Piece) {&players[0], {7, 1}, 180, BLOCK};
-    *p_ptr++ = (Piece) {&players[0], {8, 1}, 90, TRIANGLE};
+    *p_ptr++ = (Piece) {&players[0], {0, 1}, 180, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[0], {1, 1}, 180, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[0], {2, 1}, 180, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[0], {3, 1}, 0, SPLITTER, true};
+    *p_ptr++ = (Piece) {&players[0], {4, 1}, 90, STRAIGHT, true};
+    *p_ptr++ = (Piece) {&players[0], {5, 1}, 0, STRAIGHT, true};
+    *p_ptr++ = (Piece) {&players[0], {6, 1}, 180, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[0], {7, 1}, 180, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[0], {8, 1}, 90, TRIANGLE, true};
 
-    *p_ptr++ = (Piece) {&players[1], {0, 8}, 0, TRIANGLE};
-    *p_ptr++ = (Piece) {&players[1], {1, 8}, 0, TRIANGLE};
-    *p_ptr++ = (Piece) {&players[1], {2, 8}, 90, DIAGONAL};
-    *p_ptr++ = (Piece) {&players[1], {3, 8}, 0, HYPERCUBE};
-    *p_ptr++ = (Piece) {&players[1], {4, 8}, 0, KING};
-    *p_ptr++ = (Piece) {&players[1], {5, 8}, 0, LASER};
-    *p_ptr++ = (Piece) {&players[1], {6, 8}, 0, DIAGONAL};
-    *p_ptr++ = (Piece) {&players[1], {7, 8}, -90, TRIANGLE};
-    *p_ptr++ = (Piece) {&players[1], {8, 8}, -90, TRIANGLE};
+    *p_ptr++ = (Piece) {&players[1], {0, 8}, 0, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[1], {1, 8}, 0, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[1], {2, 8}, 90, DIAGONAL, true};
+    *p_ptr++ = (Piece) {&players[1], {3, 8}, 0, HYPERCUBE, true};
+    *p_ptr++ = (Piece) {&players[1], {4, 8}, 0, KING, true};
+    *p_ptr++ = (Piece) {&players[1], {5, 8}, 0, LASER, true};
+    *p_ptr++ = (Piece) {&players[1], {6, 8}, 0, DIAGONAL, true};
+    *p_ptr++ = (Piece) {&players[1], {7, 8}, -90, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[1], {8, 8}, -90, TRIANGLE, true};
 
-    *p_ptr++ = (Piece) {&players[1], {0, 7}, -90, TRIANGLE};
-    *p_ptr++ = (Piece) {&players[1], {1, 7}, 0, BLOCK};
-    *p_ptr++ = (Piece) {&players[1], {2, 7}, 0, BLOCK};
-    *p_ptr++ = (Piece) {&players[1], {3, 7}, 0, STRAIGHT};
-    *p_ptr++ = (Piece) {&players[1], {4, 7}, 90, STRAIGHT};
-    *p_ptr++ = (Piece) {&players[1], {5, 7}, 180, SPLITTER};
-    *p_ptr++ = (Piece) {&players[1], {6, 7}, 0, BLOCK};
-    *p_ptr++ = (Piece) {&players[1], {7, 7}, 0, BLOCK};
-    *p_ptr++ = (Piece) {&players[1], {8, 7}, 0, TRIANGLE};
+    *p_ptr++ = (Piece) {&players[1], {0, 7}, -90, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[1], {1, 7}, 0, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[1], {2, 7}, 0, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[1], {3, 7}, 0, STRAIGHT, true};
+    *p_ptr++ = (Piece) {&players[1], {4, 7}, 90, STRAIGHT, true};
+    *p_ptr++ = (Piece) {&players[1], {5, 7}, 180, SPLITTER, true};
+    *p_ptr++ = (Piece) {&players[1], {6, 7}, 0, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[1], {7, 7}, 0, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[1], {8, 7}, 0, TRIANGLE, true};
 }
 
 void setupGameState() {
@@ -216,14 +245,48 @@ void mouseUpHandler(SDL_MouseButtonEvent* evt) {
     Vector2 tile;
     Piece* piece;
     if(getTileUnder(&board, (Vector2){evt->x, evt->y}, &tile)) {
-        if(getPieceOnTile(&gameState, tile, piece)) {
+        if(getPieceOnTile(&gameState, tile, &piece)) {
             if(gameState.isPieceSelected) {
                 if(gameState.selectedPiece == piece) {
+                    cancelPieceRotation(&gameState);
                     gameState.isPieceSelected = false;
+                } else { // We have a piece selected and we are clicking on a tile with another piece
+                    Move possibleMoves[4];
+                    int moveCount = getValidMoves(&gameState, gameState.selectedPiece, possibleMoves);
+                    for(int i = 0; i < moveCount; i++) {
+                        if(tile.x == possibleMoves[i].endPos.x && tile.y == possibleMoves[i].endPos.y) {
+                            piece->isActive = false;
+                            gameState.selectedPiece->location = (Vector2){tile.x, tile.y};
+                            gameState.isPieceSelected = false;
+                            endMove(&gameState);
+                        }
+                    }
                 }
             } else {
-                gameState.selectedPiece = piece;
-                gameState.isPieceSelected = true;
+                if(piece->player == &gameState.players[gameState.activePlayer]) {
+                    gameState.selectedPiece = piece;
+                    gameState.isPieceSelected = true;
+
+                    Move possibleMoves[4];
+                    int moveCount = getValidMoves(&gameState, piece, possibleMoves);
+                    printf("Valid number of moves: %d\n", moveCount);
+                    for(int i = 0; i < moveCount; i++) {
+                        printf("Valid Move: x:%d y:%d\n", (int)possibleMoves[i].endPos.x, (int)possibleMoves[i].endPos.y);
+                    }
+                }
+            }
+        } else { // Clicked on an empty tile
+            printf("clicking on empty tile (%d, %d)\n", (int)tile.x, (int)tile.y);
+            if(gameState.isPieceSelected) {
+                Move possibleMoves[4];
+                int moveCount = getValidMoves(&gameState, gameState.selectedPiece, possibleMoves);
+                for(int i = 0; i < moveCount; i++) {
+                    if(tile.x == possibleMoves[i].endPos.x && tile.y == possibleMoves[i].endPos.y) {
+                        gameState.selectedPiece->location = (Vector2){tile.x, tile.y};
+//                        gameState.isPieceSelected = false;
+                        endMove(&gameState);
+                    }
+                }
             }
         }
     }
