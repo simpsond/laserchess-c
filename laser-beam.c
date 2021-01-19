@@ -23,15 +23,12 @@ void destroyBeam(Beam* beam) {
         next = cur->next;
         nextCount = cur->nextCount;
         free(cur);
-        cur = next[0];
+        if(nextCount > 0) {
+            cur = next[0];
+            free(next);
+        }
     } while(nextCount > 0);
 
-//    while(cur->nextCount > 0) {
-//        next = cur->next;
-//        free(cur->next[0]);
-//        free(cur);
-//        cur = next[0];
-//    }
 }
 
 void fireBeam(Beam* beam, Board* board) {

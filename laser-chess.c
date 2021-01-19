@@ -104,6 +104,7 @@ void fireLaser(GameState* gs, Board* board) {
 void turnLaserOff(GameState* gs) {
 
     gs->isLaserOn = false;
+    destroyBeam(gs->beam);
 }
 
 size_t getValidMoves(GameState* gs, Piece* piece, Move* moves) {
