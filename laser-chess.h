@@ -9,37 +9,11 @@
 #include <SDL.h>
 #include <SDL2_gfxPrimitives.h>
 #include "utils.h"
+#include "GameState.h"
+#include "Piece.h"
+#include "Player.h"
 #include "laser-beam.h"
 #include "board.h"
-
-typedef enum {
-    TRIANGLE,
-    STRAIGHT,
-    DIAGONAL,
-    BLOCK,
-    SPLITTER,
-    HYPERCUBE,
-    LASER,
-    KING
-} pieces_t;
-
-typedef enum {
-    PLAYER1,
-    PLAYER2
-} player_t;
-
-typedef struct StructPlayer {
-    SDL_Color color;
-    char* name;
-} Player;
-
-typedef struct StructPiece {
-    Player* player;
-    Vector2 location;
-    int rotation;
-    pieces_t type;
-    bool isActive;
-} Piece;
 
 typedef struct StructMove {
     Vector2 startPos;
@@ -48,27 +22,7 @@ typedef struct StructMove {
     Piece* capturedPiece;
 } Move;
 
-typedef struct StructGameState {
-    Player* players;
-    Piece* pieces;
-    int pieceCount;
 
-    int activePlayer;
-    int movesLeft;
-
-    bool isTileHovered;
-    Vector2 hoveredTile;
-
-    bool isPieceSelected;
-    Piece* selectedPiece;
-    bool isPieceRotating;
-    int startingRotation;
-
-    bool isLaserOn;
-    bool hasLaserFiredThisTurn;
-//    Vector2 laserPath[9][9];
-    Beam *beam;
-} GameState;
 
 // Utility Functions
 bool getTileUnder(Board* b, Vector2 p, Vector2* tile);
@@ -79,9 +33,6 @@ bool isValidTile(Vector2 tile);
 // Gameplay Functions
 void endTurn(GameState* gs);
 void endMove(GameState* gs);
-void rotatePiece(GameState* gs);
-void commitPieceRotation(GameState* gs);
-void cancelPieceRotation(GameState* gs);
 void fireLaser(GameState* gs, Board* board);
 void turnLaserOff(GameState* gs);
 size_t getValidMoves(GameState* gs, Piece* piece, Move* moves);

@@ -6,13 +6,33 @@
 void drawLaserBeam(Board* b, GameState* gs, SDL_Renderer* renderer) {
     Vector2 refPoints[9];
     Vector2 p1, p2;
+    Piece* tmpPiece;
 
     Beam* cur = gs->beam;
     while(cur) {
         printf("laser had direction at (%d, %d)\n", (int)cur->tile.x, (int)cur->tile.y);
         getBoxFromTile(b,cur->tile, &p1, &p2);
         getBoxRefPoints(p1, p2,0,refPoints,9);
-        thickLineRGBA(renderer, round(refPoints[1].x), round(refPoints[1].y), round(refPoints[5].x), round(refPoints[5].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
+
+        if(getPieceOnTile(gs,cur->tile, &tmpPiece)) {
+            switch (tmpPiece->type) {
+                case SPLITTER:
+                    thickLineRGBA(renderer, round(refPoints[1].x), round(refPoints[1].y), round(refPoints[8].x),
+                              round(refPoints[8].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
+                    thickLineRGBA(renderer, round(refPoints[8].x), round(refPoints[8].y), round(refPoints[3].x),
+                                  round(refPoints[3].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
+                    break;
+            }
+        } else {
+            if(cur->direction.x != 0) {
+                thickLineRGBA(renderer, round(refPoints[7].x), round(refPoints[7].y), round(refPoints[3].x),
+                              round(refPoints[3].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
+            } else {
+                thickLineRGBA(renderer, round(refPoints[1].x), round(refPoints[1].y), round(refPoints[5].x),
+                              round(refPoints[5].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
+            }
+        }
+
 
         if(cur->nextCount > 0) {
             cur = cur->next[0];
@@ -20,21 +40,6 @@ void drawLaserBeam(Board* b, GameState* gs, SDL_Renderer* renderer) {
             cur = NULL;
         }
     }
-
-//    Vector2 refPoints[9];
-//    Vector2 p1, p2;
-//
-//
-//    for(int i = 0; i < 9; i++) {
-//        for(int j = 0; j < 9; j++) {
-//            if(hasDirectionVector2(gs->laserPath[i][j])) {
-//                printf("laser had direction at (%d, %d)\n", i, j);
-//                getBoxFromTile(b,(Vector2) {(float)i, (float)j},&p1,&p2);
-//                getBoxRefPoints(p1, p2,0,refPoints,9);
-//                thickLineRGBA(renderer, round(refPoints[1].x), round(refPoints[1].y), round(refPoints[5].x), round(refPoints[5].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
-//            }
-//        }
-//    }
 }
 
 void drawPiece(Board* b, Piece* piece) {

@@ -52,29 +52,7 @@ void endMove(GameState* gs) {
     }
 }
 
-void rotatePiece(GameState* gs) {
-    if(gs->isPieceSelected) {
-        if(!gs->isPieceRotating) {
-            gs->isPieceRotating = true;
-            gs->startingRotation = gs->selectedPiece->rotation;
-        }
-        gs->selectedPiece->rotation += 90;
-    }
-}
 
-void commitPieceRotation(GameState* gs) {
-    gs->isPieceRotating = false;
-    gs->startingRotation = 0;
-    endMove(gs);
-}
-
-void cancelPieceRotation(GameState* gs) {
-    if(gs->isPieceRotating) {
-        gs->isPieceRotating = false;
-        gs->selectedPiece->rotation = gs->startingRotation;
-        gs->startingRotation = 0;
-    }
-}
 
 void fireLaser(GameState* gs, Board* board) {
     Vector2 laserDirVector;
@@ -94,7 +72,7 @@ void fireLaser(GameState* gs, Board* board) {
    }
 
     gs->beam = createBeam(gs->selectedPiece->location, laserDirVector);
-    fireBeam(gs->beam, board);
+    fireBeam(gs, board);
     gs->isLaserOn = true;
 
     gs->hasLaserFiredThisTurn = true;

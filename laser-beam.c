@@ -31,11 +31,13 @@ void destroyBeam(Beam* beam) {
 
 }
 
-void fireBeam(Beam* beam, Board* board) {
+void fireBeam(GameState* gs, Board* board) {
     Beam* cur, *next;
+    Piece* collisionPiece;
 
-    cur = beam;
+    cur = gs->beam;
     while(isValidTile(addVector2(cur->tile, cur->direction))) {
+
         next = (Beam*)malloc(sizeof(Beam));
         next->tile = addVector2(cur->tile, cur->direction);
         next->direction = cur->direction;
@@ -46,5 +48,10 @@ void fireBeam(Beam* beam, Board* board) {
         cur->next[0] = next;
 
         cur = next;
+
+        if(getPieceOnTile(gs, cur->tile, &collisionPiece)) { // We have collided with a piece
+            processBeamPieceCollision(gs,cur, collisionPiece);
+//            break;
+        }
     }
 }

@@ -24,7 +24,7 @@ void rotatePoints(Vector2* points, Vector2 origin, int size, int degrees);
 void getBoxRefPoints(Vector2 p1, Vector2 p2, float margin, Vector2* refPoints, int size);
 
 Vector2 addVector2(Vector2 a, Vector2 b);
-bool hasDirectionVector2(Vector2 a);
+Vector2 rotateDegCW(Vector2 vec, float angle); // Rotation given in clockwise degrees
 
 SDL_Color adjustColorBrightness(struct SDL_Color color, float scale);
 

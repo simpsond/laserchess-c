@@ -58,11 +58,16 @@ Vector2 addVector2(Vector2 a, Vector2 b) {
     return (Vector2){a.x + b.x, a.y + b.y};
 }
 
-bool hasDirectionVector2(Vector2 a) {
-    if(a.x != 0 || a.y !=0) {
-        return true;
-    }
-    return false;
+Vector2 rotateDegCW(Vector2 vec, float angle) {
+    Vector2 returnVector;
+    float radAngle = angle * M_PI / 180;
+    float cs = cos(radAngle);
+    float sn = sin(radAngle);
+
+    returnVector.x = vec.x * cs + vec.y*sn;
+    returnVector.y = vec.x * -sn + vec.y * cs;
+
+    return returnVector;
 }
 
 SDL_Color adjustColorBrightness(struct SDL_Color color, float scale) {

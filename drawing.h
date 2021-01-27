@@ -4,6 +4,9 @@
 
 #ifndef LASER_CHESS_C_DRAWING_H
 #define LASER_CHESS_C_DRAWING_H
+#include "GameState.h"
+#include "Piece.h"
+#include "Player.h"
 #include "laser-chess.h"
 
 void drawBoard(Board* b);

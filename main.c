@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "GameState.h"
 #include "laser-chess.h"
 #include "drawing.h"
 #include <SDL.h>
@@ -195,6 +196,10 @@ void placePieces() {
     *p_ptr++ = (Piece) {&players[1], {6, 7}, 0, BLOCK, true};
     *p_ptr++ = (Piece) {&players[1], {7, 7}, 0, BLOCK, true};
     *p_ptr++ = (Piece) {&players[1], {8, 7}, 0, TRIANGLE, true};
+
+    for(int i = 0; i < MAXPIECES; i++) {
+        attachDefaultBeamIntersects(&pieces[i]);
+    }
 }
 
 void setupGameState() {
