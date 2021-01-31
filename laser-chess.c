@@ -132,3 +132,11 @@ bool getTileUnder(Board* b, Vector2 p, Vector2* tile) {
         return true;
     }
 }
+
+void reconcileDestroyedPieces(GameState* gs) {
+    for(int i = 0; i < MAXPIECES; i++) {
+        if(gs->pieces[i].markedDestroy) {
+            gs->pieces[i].isActive = false;
+        }
+    }
+}

@@ -50,8 +50,9 @@ void fireBeam(GameState* gs, Board* board) {
         cur = next;
 
         if(getPieceOnTile(gs, cur->tile, &collisionPiece)) { // We have collided with a piece
-            processBeamPieceCollision(gs,cur, collisionPiece);
-//            break;
+            if(!processBeamPieceCollision(gs,cur, collisionPiece)) {
+                break;
+            }
         }
     }
 }

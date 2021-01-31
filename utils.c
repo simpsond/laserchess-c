@@ -64,10 +64,27 @@ Vector2 rotateDegCW(Vector2 vec, float angle) {
     float cs = cos(radAngle);
     float sn = sin(radAngle);
 
-    returnVector.x = vec.x * cs + vec.y*sn;
-    returnVector.y = vec.x * -sn + vec.y * cs;
+    returnVector.x = vec.x * cs - vec.y*sn;
+    returnVector.y = vec.x * sn + vec.y * cs;
 
     return returnVector;
+}
+
+float calcAngleVector2(Vector2 ld, Vector2 pr) {
+    pr.x *= -1;
+    pr.y *= -1;
+
+    int sign = (int) ld.x * pr.y - ld.y * pr.x;
+    if(sign == 0) {
+        sign++;
+    }
+    float r = acos(ld.x*pr.x + ld.y*pr.y) * sign;
+
+    if(sign < 0) {
+        r = 2 * M_PI + r;
+    }
+    // acos returns the angle in radians, we want degrees
+    return r * 180 / M_PI;
 }
 
 SDL_Color adjustColorBrightness(struct SDL_Color color, float scale) {

@@ -17,6 +17,12 @@ typedef struct structVector2 {
     float y;
 } Vector2;
 
+typedef struct structVector3 {
+    float x;
+    float y;
+    float z;
+} Vector3;
+
 
 
 Vector2 rotate(Vector2 point, Vector2 origin, int degrees);
@@ -25,6 +31,7 @@ void getBoxRefPoints(Vector2 p1, Vector2 p2, float margin, Vector2* refPoints, i
 
 Vector2 addVector2(Vector2 a, Vector2 b);
 Vector2 rotateDegCW(Vector2 vec, float angle); // Rotation given in clockwise degrees
+float calcAngleVector2(Vector2 ld, Vector2 pr);
 
 SDL_Color adjustColorBrightness(struct SDL_Color color, float scale);
 

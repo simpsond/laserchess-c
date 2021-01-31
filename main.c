@@ -9,7 +9,6 @@
 #define WIDTH 1024
 #define HEIGHT 768
 
-#define MAXPIECES 36
 
 void renderStatus();
 void render(SDL_Renderer*);
@@ -130,11 +129,12 @@ void mainLoop() {
                         break;
                     case SDLK_SPACE:
                         if(!gameState.isLaserOn) {
-                        printf("space bar, let's fire a laser\n");
-                        if(gameState.isPieceSelected && gameState.selectedPiece->type == LASER) {
-                            fireLaser(&gameState, &board);
-                        }
+                            printf("space bar, let's fire a laser\n");
+                            if(gameState.isPieceSelected && gameState.selectedPiece->type == LASER) {
+                                fireLaser(&gameState, &board);
+                            }
                         } else {
+                            reconcileDestroyedPieces(&gameState);
                             turnLaserOff(&gameState);
                         }
                         break;

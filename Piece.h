@@ -47,7 +47,8 @@ void commitPieceRotation(GameState* gs);
 void cancelPieceRotation(GameState* gs);
 
 void attachDefaultBeamIntersects(Piece* piece);
-void processBeamPieceCollision(GameState* gs, Beam* tip, Piece* hitPiece);
-BeamIntersect* getBeamIntersect(Beam* tip, Piece* hitPiece);
+bool processBeamPieceCollision(GameState* gs, Beam* tip, Piece* hitPiece);
+
+Vector2 getVectorRotation(Piece* piece);
 
 #endif //LASER_CHESS_C_PIECE_H

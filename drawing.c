@@ -2,25 +2,32 @@
 // Created by Dustin Simpson on 1/17/21.
 //
 #include "drawing.h"
+#include "utils.h"
+
 
 void drawLaserBeam(Board* b, GameState* gs, SDL_Renderer* renderer) {
     Vector2 refPoints[9];
     Vector2 p1, p2;
     Piece* tmpPiece;
 
+    Beam* prev = gs->beam;
     Beam* cur = gs->beam;
     while(cur) {
-        printf("laser had direction at (%d, %d)\n", (int)cur->tile.x, (int)cur->tile.y);
+//        printf("laser had direction at (%d, %d)\n", (int)cur->tile.x, (int)cur->tile.y);
         getBoxFromTile(b,cur->tile, &p1, &p2);
         getBoxRefPoints(p1, p2,0,refPoints,9);
 
+//        drawLaserEdgeToCenter(prev,&refPoints, renderer);
+//        drawLaserEdgeToCenter(cur,&refPoints, renderer);
         if(getPieceOnTile(gs,cur->tile, &tmpPiece)) {
             switch (tmpPiece->type) {
                 case SPLITTER:
-                    thickLineRGBA(renderer, round(refPoints[1].x), round(refPoints[1].y), round(refPoints[8].x),
-                              round(refPoints[8].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
-                    thickLineRGBA(renderer, round(refPoints[8].x), round(refPoints[8].y), round(refPoints[3].x),
-                                  round(refPoints[3].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
+                    drawLaserEdgeToCenter(prev,&refPoints, renderer);
+                    if(!tmpPiece->markedDestroy) {
+                        drawLaserEdgeToCenter(cur, &refPoints, renderer);
+                    }
+                    break;
+                default:
                     break;
             }
         } else {
@@ -33,13 +40,21 @@ void drawLaserBeam(Board* b, GameState* gs, SDL_Renderer* renderer) {
             }
         }
 
-
         if(cur->nextCount > 0) {
+            prev = cur;
             cur = cur->next[0];
         } else {
             cur = NULL;
         }
     }
+}
+
+void drawLaserEdgeToCenter(Beam* tip, Vector2* refPoints, SDL_Renderer* renderer) {
+    int a = (int)calcAngleVector2(tip->direction, (Vector2){0.0f,-1.0f});
+    int r = (((a / 90)+1)*2) - 1;
+
+    thickLineRGBA(renderer, round(refPoints[r].x), round(refPoints[r].y), round(refPoints[8].x),
+                  round(refPoints[8].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
 }
 
 void drawPiece(Board* b, Piece* piece) {

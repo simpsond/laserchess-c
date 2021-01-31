@@ -15,6 +15,8 @@
 #include "laser-beam.h"
 #include "board.h"
 
+#define MAXPIECES 36
+
 typedef struct StructMove {
     Vector2 startPos;
     Vector2 endPos;
@@ -29,6 +31,8 @@ bool getTileUnder(Board* b, Vector2 p, Vector2* tile);
 void getBoxFromTile(Board* b, Vector2 tile, Vector2* p1, Vector2* p2);
 bool getPieceOnTile(GameState* gs, Vector2 tile, Piece** piece);
 bool isValidTile(Vector2 tile);
+
+void reconcileDestroyedPieces(GameState* gs);
 
 // Gameplay Functions
 void endTurn(GameState* gs);
