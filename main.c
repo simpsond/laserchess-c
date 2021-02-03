@@ -68,13 +68,14 @@ void render(SDL_Renderer* renderer) {
     drawBoard(&board);
     drawBoardHighlights(&board, &gameState);
 
+    if(gameState.isLaserOn) {
+        drawLaserBeam(&board, &gameState, renderer);
+    }
+
     for(int i = 0; i < MAXPIECES; i++) {
         drawPiece(&board, &pieces[i]);
     }
 
-    if(gameState.isLaserOn) {
-        drawLaserBeam(&board, &gameState, renderer);
-    }
 
     renderStatus();
     SDL_RenderPresent(renderer);

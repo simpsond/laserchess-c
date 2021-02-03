@@ -10,36 +10,18 @@ void drawLaserBeam(Board* b, GameState* gs, SDL_Renderer* renderer) {
     Vector2 p1, p2;
     Piece* tmpPiece;
 
-    Beam* prev = gs->beam;
+    Beam* prev = NULL;
     Beam* cur = gs->beam;
     while(cur) {
-//        printf("laser had direction at (%d, %d)\n", (int)cur->tile.x, (int)cur->tile.y);
         getBoxFromTile(b,cur->tile, &p1, &p2);
         getBoxRefPoints(p1, p2,0,refPoints,9);
 
-        drawLaserEdgeToCenter(prev,refPoints, renderer);
-        drawLaserCenterToEdge(cur,refPoints, renderer);
-//        if(getPieceOnTile(gs,cur->tile, &tmpPiece)) {
-//            switch (tmpPiece->type) {
-//                case SPLITTER:
-//                    drawLaserEdgeToCenter(prev,refPoints, renderer);
-//                    if(!tmpPiece->markedDestroy) {
-//                       drawLaserEdgeToCenter(cur, refPoints, renderer);
-//                        drawLaserCenterToEdge(cur, refPoints, renderer);
-//                    }
-//                    break;
-//                default:
-//                    break;
-//            }
-//        } else {
-//            if((int)cur->direction.x != 0) {
-//                thickLineRGBA(renderer, round(refPoints[7].x), round(refPoints[7].y), round(refPoints[3].x),
-//                              round(refPoints[3].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
-//            } else {
-//                thickLineRGBA(renderer, round(refPoints[1].x), round(refPoints[1].y), round(refPoints[5].x),
-//                              round(refPoints[5].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
-//            }
-//        }
+        if(prev) {
+            drawLaserEdgeToCenter(prev, refPoints, renderer);
+        }
+        if(cur->nextCount > 0) {
+            drawLaserCenterToEdge(cur, refPoints, renderer);
+        }
 
         if(cur->nextCount > 0) {
             prev = cur;
