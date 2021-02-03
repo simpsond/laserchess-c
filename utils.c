@@ -71,8 +71,8 @@ Vector2 rotateDegCW(Vector2 vec, float angle) {
 }
 
 float calcAngleVector2(Vector2 ld, Vector2 pr) {
-    pr.x *= -1;
-    pr.y *= -1;
+//    pr.x *= -1;
+//    pr.y *= -1;
 
     int sign = (int) ld.x * pr.y - ld.y * pr.x;
     if(sign == 0) {

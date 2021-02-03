@@ -38,6 +38,8 @@ bool processBeamPieceCollision(GameState* gs, Beam* tip, Piece* hitPiece) {
 //    tip->direction = (Vector2){.x = beamDirection}
     printf("Processing Beam Collision\n");
     Vector2 rotation_v =getVectorRotation(hitPiece);
+    rotation_v.x *= -1;
+    rotation_v.y *= -1;
     printf("Piece Rotation is %d degrees, %d,%d\n", hitPiece->rotation, (int)rotation_v.x, (int)rotation_v.y);
     float collisionAngle = calcAngleVector2(tip->direction, rotation_v);
     printf("Offset of IntersectProc is %d\n", (int)collisionAngle / 90);
