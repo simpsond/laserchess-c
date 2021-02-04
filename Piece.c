@@ -57,6 +57,8 @@ bool processBeamPieceCollision(GameState* gs, Beam* tip, Piece* hitPiece) {
         default:
             break;
     }
+
+    return false;
 }
 
 

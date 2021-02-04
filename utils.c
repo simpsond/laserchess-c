@@ -70,15 +70,12 @@ Vector2 rotateDegCW(Vector2 vec, float angle) {
     return returnVector;
 }
 
-float calcAngleVector2(Vector2 ld, Vector2 pr) {
-//    pr.x *= -1;
-//    pr.y *= -1;
-
-    int sign = (int) ld.x * pr.y - ld.y * pr.x;
+float calcAngleVector2(Vector2 reference_vec, Vector2 vec) {
+    int sign = (int) reference_vec.x * vec.y - reference_vec.y * vec.x;
     if(sign == 0) {
         sign++;
     }
-    float r = acos(ld.x*pr.x + ld.y*pr.y) * sign;
+    float r = acos(reference_vec.x*vec.x + reference_vec.y*vec.y) * sign;
 
     if(sign < 0) {
         r = 2 * M_PI + r;
