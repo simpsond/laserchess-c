@@ -14,6 +14,7 @@ void drawBoard(Board* b);
 void drawBoardHighlights(Board* b, GameState* gs);
 
 void drawLaserBeam(Board* b, GameState* gs, SDL_Renderer* renderer);
+void drawLaserTip(Board* b, Beam* prev, Beam* tip, SDL_Renderer* renderer);
 void drawLaserEdgeToCenter(Beam* tip, Vector2* refPoints, SDL_Renderer* renderer);
 void drawLaserCenterToEdge(Beam* tip, Vector2* refPoints, SDL_Renderer* renderer);
 

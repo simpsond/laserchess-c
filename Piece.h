@@ -29,7 +29,7 @@ typedef enum {
 typedef struct StructBeamIntersect {
     intersectAction_t beamWill;
     int reflectionAngleCount;
-    float reflectionAngles;
+    float reflectionAngles[2];
 } BeamIntersect;
 
 typedef struct StructPiece {

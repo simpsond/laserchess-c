@@ -5,6 +5,37 @@
 #include "utils.h"
 
 
+void drawLaserTip(Board* b, Beam* prev, Beam* tip, SDL_Renderer* renderer) {
+    Vector2 refPoints[9];
+    Vector2 p1, p2;
+    getBoxFromTile(b,tip->tile, &p1, &p2);
+    getBoxRefPoints(p1, p2,0,refPoints,9);
+
+
+//    Vector2 prevRefPoints[9];
+//    Vector2 prevP1, prevP2;
+//    getBoxFromTile(b,tip->tile, &prevP1, &prevP2);
+//    getBoxRefPoints(prevP1, prevP2,0,prevRefPoints,9);
+
+    if(prev) {
+//        for(int i = 0; i < tip->prev->nextCount; i ++) {
+//            drawLaserCenterToEdge(tip, refPoints, renderer);
+//        }
+        drawLaserEdgeToCenter(tip, refPoints, renderer);
+        drawLaserCenterToEdge(tip, refPoints, renderer);
+//    if(tip->nextCount > 0) {
+//        drawLaserCenterToEdge(tip, refPoints, renderer);
+//    }
+//    for(int i = 0; i < prev->nextCount; i++) {
+//    }
+
+    } else {
+        drawLaserCenterToEdge(tip, refPoints, renderer);
+    }
+    for(int i = 0; i < tip->nextCount; i++) {
+       drawLaserTip(b, tip, tip->next[i], renderer);
+    }
+}
 void drawLaserBeam(Board* b, GameState* gs, SDL_Renderer* renderer) {
     Vector2 refPoints[9];
     Vector2 p1, p2;
@@ -12,43 +43,31 @@ void drawLaserBeam(Board* b, GameState* gs, SDL_Renderer* renderer) {
 
     Beam* prev = NULL;
     Beam* cur = gs->beam;
-    while(cur) {
-        getBoxFromTile(b,cur->tile, &p1, &p2);
-        getBoxRefPoints(p1, p2,0,refPoints,9);
 
-        if(prev) {
-            drawLaserEdgeToCenter(prev, refPoints, renderer);
-        }
-        if(cur->nextCount > 0) {
-            drawLaserCenterToEdge(cur, refPoints, renderer);
-        }
-
-        if(cur->nextCount > 0) {
-            prev = cur;
-            cur = cur->next[0];
-        } else {
-            cur = NULL;
-        }
-    }
+    drawLaserTip(b, prev, cur, renderer);
 }
 
 void drawLaserEdgeToCenter(Beam* tip, Vector2* refPoints, SDL_Renderer* renderer) {
-    Vector2 ld = tip->direction;
+    Vector2 ld = tip->entryDirection;
     ld.x *= -1;
     ld.y *= -1;
     int a = (int)calcAngleVector2((Vector2){0.0f,-1.0f}, ld);
     int r = (((a / 90)+1)*2) - 1;
+
+//    printf("drawLaserEdgeToCenter on Tile (%d, %d) r is %d\n", (int)refPoints[r].x, (int)refPoints[r].y, r);
 
     thickLineRGBA(renderer, round(refPoints[r].x), round(refPoints[r].y), round(refPoints[8].x),
                   round(refPoints[8].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);
 }
 
 void drawLaserCenterToEdge(Beam* tip, Vector2* refPoints, SDL_Renderer* renderer) {
-    Vector2 ld = tip->direction;
+    Vector2 ld = tip->exitDirection;
     ld.x *= -1;
     ld.y *= -1;
     int a = (int)calcAngleVector2((Vector2){0.0f,1.0f}, ld );
     int r = (((a / 90)+1)*2) - 1;
+
+//    printf("drawLaserCenterToEdge on Tile (%d, %d) r is %d\n", (int)refPoints[r].x, (int)refPoints[r].y, r);
 
     thickLineRGBA(renderer, round(refPoints[r].x), round(refPoints[r].y), round(refPoints[8].x),
                   round(refPoints[8].y), 3, 255, 0, 255, SDL_ALPHA_OPAQUE);

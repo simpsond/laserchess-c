@@ -12,8 +12,10 @@
 struct StructGameState;
 
 typedef struct StructBeam {
-    Vector2 direction;
+    Vector2 entryDirection;
+    Vector2 exitDirection;
     Vector2 tile;
+    struct StructBeam *prev;
     int nextCount;
     struct StructBeam **next;
 } Beam;
@@ -22,6 +24,6 @@ Beam* createBeam(Vector2 start, Vector2 dir);
 void destroyBeam(Beam* beam);
 
 void fireBeam(struct StructGameState* gs, Board* board);
-
+void splitBeam(Beam* tip, Vector2 direction);
 
 #endif //LASER_CHESS_C_LASER_BEAM_H

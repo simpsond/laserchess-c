@@ -34,20 +34,18 @@ void cancelPieceRotation(GameState* gs) {
 }
 
 bool processBeamPieceCollision(GameState* gs, Beam* tip, Piece* hitPiece) {
-//    Vector2 beamDirection = tip->direction;
-//    tip->direction = (Vector2){.x = beamDirection}
-    printf("Processing Beam Collision\n");
     Vector2 rotation_v =getVectorRotation(hitPiece);
     rotation_v.x *= -1;
     rotation_v.y *= -1;
-    printf("Piece Rotation is %d degrees, %d,%d\n", hitPiece->rotation, (int)rotation_v.x, (int)rotation_v.y);
-    float collisionAngle = calcAngleVector2(tip->direction, rotation_v);
-    printf("Offset of IntersectProc is %d\n", (int)collisionAngle / 90);
+    float collisionAngle = calcAngleVector2(tip->entryDirection, rotation_v);
     BeamIntersect * beamIntersect = &hitPiece->beamIntersectProc[(int)collisionAngle / 90];
 
     switch (beamIntersect->beamWill) {
         case REFLECT:
-            tip->direction = rotateDegCW(tip->direction, beamIntersect->reflectionAngles);
+            tip->exitDirection = rotateDegCW(tip->entryDirection, beamIntersect->reflectionAngles[0]);
+            for(int i = 1; i < beamIntersect->reflectionAngleCount; i++) {
+                splitBeam(tip, rotateDegCW(tip->entryDirection, beamIntersect->reflectionAngles[i]));
+            }
             return true;
             break;
         case DESTROY:
@@ -58,7 +56,7 @@ bool processBeamPieceCollision(GameState* gs, Beam* tip, Piece* hitPiece) {
             break;
     }
 
-    return false;
+    return true;
 }
 
 
@@ -66,10 +64,10 @@ void attachDefaultBeamIntersects(Piece* piece) {
     if(piece->type == SPLITTER) {
 //        float *angle = malloc(sizeof(float));
 //        *angle = 90.0f;
-        piece->beamIntersectProc[0] = (BeamIntersect){.beamWill=REFLECT, .reflectionAngleCount=1,.reflectionAngles=270.0f};
-        piece->beamIntersectProc[1] = (BeamIntersect){.beamWill=REFLECT, .reflectionAngleCount=1,.reflectionAngles=270.0f};
+        piece->beamIntersectProc[0] = (BeamIntersect){.beamWill=REFLECT, .reflectionAngleCount=2,.reflectionAngles={270.0f, 90.0f}};
+        piece->beamIntersectProc[1] = (BeamIntersect){.beamWill=REFLECT, .reflectionAngleCount=1,.reflectionAngles={270.0f}};
         piece->beamIntersectProc[2] = (BeamIntersect){.beamWill=DESTROY, .reflectionAngleCount=0};
-        piece->beamIntersectProc[3] = (BeamIntersect){.beamWill=REFLECT, .reflectionAngleCount=1,.reflectionAngles=90.0f};
+        piece->beamIntersectProc[3] = (BeamIntersect){.beamWill=REFLECT, .reflectionAngleCount=1,.reflectionAngles={90.0f}};
     }
 }
 
