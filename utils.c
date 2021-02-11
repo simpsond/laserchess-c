@@ -58,6 +58,10 @@ Vector2 addVector2(Vector2 a, Vector2 b) {
     return (Vector2){a.x + b.x, a.y + b.y};
 }
 
+Vector2 roundVector2(Vector2 v) {
+    return (Vector2){roundf(v.x), roundf(v.y)};
+}
+
 Vector2 rotateDegCW(Vector2 vec, float angle) {
     Vector2 returnVector;
     float radAngle = angle * M_PI / 180;

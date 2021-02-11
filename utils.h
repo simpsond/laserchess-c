@@ -34,6 +34,8 @@ Vector2 addVector2(Vector2 a, Vector2 b);
 Vector2 rotateDegCW(Vector2 vec, float angle); // Rotation given in clockwise degrees
 float calcAngleVector2(Vector2 reference_vec, Vector2 vec);
 
+Vector2 roundVector2(Vector2 v);
+
 SDL_Color adjustColorBrightness(struct SDL_Color color, float scale);
 
 #endif //LASER_CHESS_C_UTILS_H

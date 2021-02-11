@@ -23,7 +23,8 @@ typedef enum {
 typedef enum {
     ABSORB,
     REFLECT,
-    DESTROY
+    DESTROY,
+    PASS
 } intersectAction_t;
 
 typedef struct StructBeamIntersect {

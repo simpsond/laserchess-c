@@ -18,6 +18,7 @@ typedef struct StructBeam {
     struct StructBeam *prev;
     int nextCount;
     struct StructBeam **next;
+    bool isForkHead;
 } Beam;
 
 Beam* createBeam(Vector2 start, Vector2 dir);
@@ -25,5 +26,7 @@ void destroyBeam(Beam* beam);
 
 void fireBeam(struct StructGameState* gs, Board* board);
 void splitBeam(Beam* tip, Vector2 direction);
+
+void printBeam(Beam* beam);
 
 #endif //LASER_CHESS_C_LASER_BEAM_H

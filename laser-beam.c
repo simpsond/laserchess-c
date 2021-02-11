@@ -56,7 +56,7 @@ void expandBeam(GameState* gs, Beam* tip) {
 
     if(isValidTile(addVector2(tip->tile, tip->exitDirection))) {
         next = (Beam*)malloc(sizeof(Beam));
-        next->tile = addVector2(tip->tile, tip->exitDirection);
+        next->tile = roundVector2(addVector2(tip->tile, tip->exitDirection));
         next->entryDirection = tip->exitDirection;
         next->exitDirection = tip->exitDirection;
         next->nextCount = 0;
@@ -82,6 +82,7 @@ void fireBeam(GameState* gs, Board* board) {
 
     cur = gs->beam;
     expandBeam(gs, cur);
+    printBeam(cur);
 }
 
 void splitBeam(Beam* tip, Vector2 direction) {
@@ -93,6 +94,7 @@ void splitBeam(Beam* tip, Vector2 direction) {
     next->entryDirection = prev->exitDirection;
     next->exitDirection = direction;
 //    next->prev = tip;
+//    next->isForkHead = true;
     next->prev = NULL; // Somewhat of a hack to get the system to not reprocess the splitter collision
     next->nextCount = 0;
 
@@ -112,3 +114,9 @@ void splitBeam(Beam* tip, Vector2 direction) {
     prev->next[prev->nextCount - 1] = next;
 }
 
+void printBeam(Beam* beam) {
+    printf("Tile %d,%d\n", (int)beam->tile.x, (int)beam->tile.y);
+    for(int i = 0; i < beam->nextCount; i++) {
+       printBeam(beam->next[i]);
+    }
+}
