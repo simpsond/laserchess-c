@@ -32,4 +32,6 @@ typedef struct StructGameState {
     Beam *beam;
 } GameState;
 
+void saveGameStateFile(GameState* gs, char* file);
+
 #endif //LASER_CHESS_C_GAMESTATE_H

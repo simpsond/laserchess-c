@@ -122,6 +122,10 @@ void mainLoop() {
                         printf("rotating piece");
                         rotatePiece(&gameState);
                         break;
+                    case 's':
+                        printf("s pushed, let's save game state\n");
+                        saveGameStateFile(&gameState, "game-state");
+                        break;
                     case SDLK_RETURN:
                         printf("return key pressed\n");
                         if(gameState.isPieceRotating) {
