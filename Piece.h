@@ -35,6 +35,7 @@ typedef struct StructBeamIntersect {
 
 typedef struct StructPiece {
     Player* player;
+    int id;
     Vector2 location;
     int rotation;
     pieces_t type;

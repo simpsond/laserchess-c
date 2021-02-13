@@ -161,46 +161,47 @@ void mainLoop() {
 
 void placePieces() {
     Piece* p_ptr = pieces;
+    int id = 0;
 
-    *p_ptr++ = (Piece) {&players[0], {0, 0}, 90, TRIANGLE, true};
-    *p_ptr++ = (Piece) {&players[0], {1, 0}, 90, TRIANGLE, true};
-    *p_ptr++ = (Piece) {&players[0], {2, 0}, 0, DIAGONAL, true};
-    *p_ptr++ = (Piece) {&players[0], {3, 0}, 180, LASER, true};
-    *p_ptr++ = (Piece) {&players[0], {4, 0}, 0, KING, true};
-    *p_ptr++ = (Piece) {&players[0], {5, 0}, 0, HYPERCUBE, true};
-    *p_ptr++ = (Piece) {&players[0], {6, 0}, 90, DIAGONAL, true};
-    *p_ptr++ = (Piece) {&players[0], {7, 0}, 180, TRIANGLE, true};
-    *p_ptr++ = (Piece) {&players[0], {8, 0}, 180, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[0], id++, {0, 0}, 90, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{1, 0}, 90, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{2, 0}, 0, DIAGONAL, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{3, 0}, 180, LASER, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{4, 0}, 0, KING, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{5, 0}, 0, HYPERCUBE, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{6, 0}, 90, DIAGONAL, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{7, 0}, 180, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{8, 0}, 180, TRIANGLE, true};
 
-    *p_ptr++ = (Piece) {&players[0], {0, 1}, 180, TRIANGLE, true};
-    *p_ptr++ = (Piece) {&players[0], {1, 1}, 180, BLOCK, true};
-    *p_ptr++ = (Piece) {&players[0], {2, 1}, 180, BLOCK, true};
-    *p_ptr++ = (Piece) {&players[0], {3, 1}, 0, SPLITTER, true};
-    *p_ptr++ = (Piece) {&players[0], {4, 1}, 90, STRAIGHT, true};
-    *p_ptr++ = (Piece) {&players[0], {5, 1}, 0, STRAIGHT, true};
-    *p_ptr++ = (Piece) {&players[0], {6, 1}, 180, BLOCK, true};
-    *p_ptr++ = (Piece) {&players[0], {7, 1}, 180, BLOCK, true};
-    *p_ptr++ = (Piece) {&players[0], {8, 1}, 90, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{0, 1}, 180, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{1, 1}, 180, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{2, 1}, 180, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{3, 1}, 0, SPLITTER, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{4, 1}, 90, STRAIGHT, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{5, 1}, 0, STRAIGHT, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{6, 1}, 180, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{7, 1}, 180, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[0], id++,{8, 1}, 90, TRIANGLE, true};
 
-    *p_ptr++ = (Piece) {&players[1], {0, 8}, 0, TRIANGLE, true};
-    *p_ptr++ = (Piece) {&players[1], {1, 8}, 0, TRIANGLE, true};
-    *p_ptr++ = (Piece) {&players[1], {2, 8}, 90, DIAGONAL, true};
-    *p_ptr++ = (Piece) {&players[1], {3, 8}, 0, HYPERCUBE, true};
-    *p_ptr++ = (Piece) {&players[1], {4, 8}, 0, KING, true};
-    *p_ptr++ = (Piece) {&players[1], {5, 8}, 0, LASER, true};
-    *p_ptr++ = (Piece) {&players[1], {6, 8}, 0, DIAGONAL, true};
-    *p_ptr++ = (Piece) {&players[1], {7, 8}, -90, TRIANGLE, true};
-    *p_ptr++ = (Piece) {&players[1], {8, 8}, -90, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{0, 8}, 0, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{1, 8}, 0, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{2, 8}, 90, DIAGONAL, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{3, 8}, 0, HYPERCUBE, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{4, 8}, 0, KING, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{5, 8}, 0, LASER, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{6, 8}, 0, DIAGONAL, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{7, 8}, -90, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{8, 8}, -90, TRIANGLE, true};
 
-    *p_ptr++ = (Piece) {&players[1], {0, 7}, -90, TRIANGLE, true};
-    *p_ptr++ = (Piece) {&players[1], {1, 7}, 0, BLOCK, true};
-    *p_ptr++ = (Piece) {&players[1], {2, 7}, 0, BLOCK, true};
-    *p_ptr++ = (Piece) {&players[1], {3, 7}, 0, STRAIGHT, true};
-    *p_ptr++ = (Piece) {&players[1], {4, 7}, 90, STRAIGHT, true};
-    *p_ptr++ = (Piece) {&players[1], {5, 7}, 180, SPLITTER, true};
-    *p_ptr++ = (Piece) {&players[1], {6, 7}, 0, BLOCK, true};
-    *p_ptr++ = (Piece) {&players[1], {7, 7}, 0, BLOCK, true};
-    *p_ptr++ = (Piece) {&players[1], {8, 7}, 0, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{0, 7}, -90, TRIANGLE, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{1, 7}, 0, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{2, 7}, 0, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{3, 7}, 0, STRAIGHT, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{4, 7}, 90, STRAIGHT, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{5, 7}, 180, SPLITTER, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{6, 7}, 0, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{7, 7}, 0, BLOCK, true};
+    *p_ptr++ = (Piece) {&players[1], id++,{8, 7}, 0, TRIANGLE, true};
 
     for(int i = 0; i < MAXPIECES; i++) {
         attachDefaultBeamIntersects(&pieces[i]);
@@ -217,6 +218,8 @@ void setupGameState() {
 
     gameState.pieces = pieces;
     gameState.pieceCount = MAXPIECES;
+
+    gameState.hasLaserFiredThisTurn = false;
 }
 
 bool init() {

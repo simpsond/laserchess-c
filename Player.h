@@ -14,6 +14,7 @@ typedef enum {
 } player_t;
 
 typedef struct StructPlayer {
+    player_t id;
     SDL_Color color;
     char* name;
 } Player;

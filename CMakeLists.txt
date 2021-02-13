@@ -18,12 +18,14 @@ message("sdl: ${SDL2_LIBRARY}")
 message("sdl_gfx: ${SDL2_gfx_INCLUDE_DIRS}")
 message("sdl_gfx: ${SDL2_gfx_LIBRARIES}")
 
+#find_package(LibCBOR REQUIRED)
+
 include_directories(/usr/local/include ${SDL2_INCLUDE_DIRS} ${SDL2_gfx_INCLUDE_DIRS})
 link_directories(/usr/local/lib ${SDL2_LIBRARY_DIRS} ${SDL2_gfx_LIBRARY_DIRS})
 #link_directories(/usr/local/lib)
 
 add_executable(laser_chess_c main.c laser-chess.c utils.c drawing.c laser-beam.c GameState.c Piece.c)
-target_link_libraries(laser_chess_c ${SDL2_gfx_LIBRARIES} m)
+target_link_libraries(laser_chess_c ${SDL2_gfx_LIBRARIES} m cbor)
 
 add_executable(list-test tests/listtest.c linked-list.c)
 

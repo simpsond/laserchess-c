@@ -7,7 +7,10 @@
 
 #include "Player.h"
 #include "laser-beam.h"
+#include "cbor.h"
 
+struct StructPiece;
+struct StructBeamIntersect;
 struct StructPiece;
 
 typedef struct StructGameState {
@@ -33,5 +36,13 @@ typedef struct StructGameState {
 } GameState;
 
 void saveGameStateFile(GameState* gs, char* file);
+
+// Serialize Helpers
+void serializeVector2(struct cbor_item_t** vec2cbor, Vector2 vector);
+void serializePlayers(struct cbor_item_t** playercbor, Player* players);
+void serializePlayer(struct cbor_item_t** playercbor, Player player);
+void serializeBeamIntersect(struct cbor_item_t** beamcbor, struct StructBeamIntersect* beamIntersect);
+void serializePiece(struct cbor_item_t** piececbor, struct StructPiece* piece);
+void serializeBeam(struct cbor_item_t** beamcbor, struct StructBeam* beam);
 
 #endif //LASER_CHESS_C_GAMESTATE_H

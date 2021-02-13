@@ -18,7 +18,6 @@ typedef struct StructBeam {
     struct StructBeam *prev;
     int nextCount;
     struct StructBeam **next;
-    bool isForkHead;
 } Beam;
 
 Beam* createBeam(Vector2 start, Vector2 dir);
