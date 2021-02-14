@@ -124,7 +124,12 @@ void mainLoop() {
                         break;
                     case 's':
                         printf("s pushed, let's save game state\n");
-                        saveGameStateFile(&gameState, "game-state");
+//                        saveGameStateFile(&gameState, "game-state");
+                        saveGameStateFileMP(&gameState, "game-state.mpack");
+                        break;
+                    case 'l':
+                        printf("l pushed, let's load game state\n");
+                        loadGameStateFileMP(&gameState, "game-state.mpack");
                         break;
                     case SDLK_RETURN:
                         printf("return key pressed\n");
@@ -213,11 +218,17 @@ void setupGameState() {
     gameState.movesLeft = 2;
     gameState.activePlayer = 0;
 
+    gameState.players[0].id = 0;
     gameState.players[0].name = "Red";
+    gameState.players[1].id = 1;
     gameState.players[1].name = "Blue";
 
     gameState.pieces = pieces;
     gameState.pieceCount = MAXPIECES;
+
+    gameState.hoveredTile.x = 0;
+    gameState.hoveredTile.y = 0;
+    gameState.isTileHovered = false;
 
     gameState.hasLaserFiredThisTurn = false;
 }

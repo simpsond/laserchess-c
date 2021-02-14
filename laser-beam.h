@@ -12,6 +12,7 @@
 struct StructGameState;
 
 typedef struct StructBeam {
+    int id;
     Vector2 entryDirection;
     Vector2 exitDirection;
     Vector2 tile;
