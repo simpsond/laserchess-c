@@ -8,9 +8,24 @@
 #include <unistd.h>
 
 
+// TODO: This is a mess, player count and max pieces are hard coded and should not be
+GameState * createGameState() {
+    GameState *gs = (GameState*)malloc(sizeof(GameState));
+    gs->players = (Player*)malloc(sizeof(Player)*2);
+    gs->pieces = (Piece*)malloc(sizeof(Piece)*36);
+    return gs;
+}
+
+void freeGameState(GameState* gs) {
+    free(gs->players);
+    free(gs->pieces);
+    free(gs);
+}
+
 void loadGameStateFileMP(GameState* gs, char* file) {
     size_t fileSize;
-    char fileWPath[256] = "saves/";
+//    char fileWPath[256] = "saves/";
+    char fileWPath[256] = "";
     FILE* fp = fopen(strcat(fileWPath, file),"r+");
     fseek(fp, 0L, SEEK_END);
     fileSize = ftell(fp);
@@ -27,6 +42,9 @@ void loadGameStateFileMP(GameState* gs, char* file) {
 
     mpack_node_t tmpNode = mpack_node_map_str (root, "players", 7);
     msgUnpackPlayers(&tmpNode, gs->players);
+
+    tmpNode = mpack_node_map_cstr(root, "pieces");
+    msgUnpackPieces(&tmpNode, gs);
 
     tmpNode = mpack_node_map_str (root, "pieceCount", 10);
     gs->pieceCount = mpack_node_u8(tmpNode);
@@ -45,7 +63,7 @@ void loadGameStateFileMP(GameState* gs, char* file) {
 
     tmpNode = mpack_node_map_cstr(root, "isPieceSelected");
     gs->isPieceSelected = mpack_node_bool(tmpNode);
-    
+
 
     mpack_tree_destroy(&tree);
 }
@@ -171,7 +189,7 @@ void msgPackPiece(mpack_writer_t* writer, struct StructPiece* piece) {
     mpack_write_u8(writer, piece->id);
 
     mpack_write_cstr(writer, "location");
-    msgPackVector2(writer, &piece->location);
+    msgPackVector2Int(writer, &piece->location);
 
     mpack_write_cstr(writer, "rotation");
     mpack_write_u8(writer, piece->rotation);
@@ -271,4 +289,37 @@ void msgUnpackVector2Int(mpack_node_t* tmpNode, Vector2* vector) {
     vector->x = mpack_node_int(vCompNode);
     vCompNode = mpack_node_array_at(*tmpNode, 1);
     vector->y = mpack_node_int(vCompNode);
+}
+
+void msgUnpackPieces(mpack_node_t* piecesNode, GameState* gs) {
+    mpack_node_t pieceNode, tmpNode;
+    int piecesCount = mpack_node_array_length(*piecesNode);
+
+    for(int i = 0; i < piecesCount; i++) {
+        pieceNode = mpack_node_array_at(*piecesNode, i);
+        tmpNode = mpack_node_map_cstr (pieceNode, "id");
+        gs->pieces[i].id = mpack_node_int(tmpNode);
+
+        tmpNode = mpack_node_map_cstr(pieceNode, "player");
+        gs->pieces[i].player = getPlayerById(mpack_node_u8(tmpNode), gs->players, 2);
+        if(gs->pieces[i].player == NULL) {
+            printf("warning null player\n");
+        }
+
+        tmpNode = mpack_node_map_cstr(pieceNode, "location");
+        msgUnpackVector2Int(&tmpNode, &gs->pieces[i].location);
+
+        tmpNode = mpack_node_map_cstr(pieceNode, "rotation");
+        gs->pieces[i].rotation = mpack_node_u8(tmpNode);
+
+        tmpNode = mpack_node_map_cstr(pieceNode, "type");
+        gs->pieces[i].type = mpack_node_u8(tmpNode);
+
+        tmpNode = mpack_node_map_cstr(pieceNode, "isActive");
+        gs->pieces[i].isActive = mpack_node_bool(tmpNode);
+
+        tmpNode = mpack_node_map_cstr(pieceNode, "markedDestroy");
+        gs->pieces[i].markedDestroy = mpack_node_bool(tmpNode);
+    }
+
 }

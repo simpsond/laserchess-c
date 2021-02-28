@@ -36,6 +36,9 @@ typedef struct StructGameState {
     Beam *beam;
 } GameState;
 
+GameState * createGameState();
+void freeGameState(GameState* gs);
+
 void loadGameStateFileMP(GameState* gs, char* file);
 void loadGameStateFile(GameState* gs, char* file);
 
@@ -52,6 +55,7 @@ void msgPackBeam(mpack_writer_t* writer, struct StructBeam* beam);
 
 // Deserialize Helpers
 void msgUnpackPlayers(mpack_node_t* tmpNode, Player* players);
+void msgUnpackPieces(mpack_node_t* piecesNode, GameState* gs);
 void msgUnpackVector2Int(mpack_node_t* tmpNode, Vector2* vector);
 
 #endif //LASER_CHESS_C_GAMESTATE_H

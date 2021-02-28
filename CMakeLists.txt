@@ -24,14 +24,27 @@ include_directories(/usr/local/include ${SDL2_INCLUDE_DIRS} ${SDL2_gfx_INCLUDE_D
 link_directories(/usr/local/lib ${SDL2_LIBRARY_DIRS} ${SDL2_gfx_LIBRARY_DIRS})
 #link_directories(/usr/local/lib)
 
-add_executable(laser_chess_c main.c laser-chess.c utils.c drawing.c laser-beam.c GameState.c Piece.c third-party/mpack/mpack.c)
-target_link_libraries(laser_chess_c ${SDL2_gfx_LIBRARIES} m cbor)
+add_executable(laser_chess_c main.c laser-chess.c utils.c drawing.c laser-beam.c GameState.c Piece.c Player.c third-party/mpack/mpack.c)
+target_link_libraries(laser_chess_c ${SDL2_gfx_LIBRARIES} m)
 
 add_executable(list-test tests/listtest.c linked-list.c)
 
 add_executable(test_utils tests/test_utils.c utils.c)
 target_link_libraries(test_utils ${SDL2_gfx_LIBRARIES} cmocka m)
 add_test(test_utils test_utils)
+
+add_executable(test_GameState tests/test_GameState.c GameState.c Player.c third-party/mpack/mpack.c)
+target_link_libraries(test_GameState ${SDL2_gfx_LIBRARIES} cmocka m)
+add_test(test_GameState test_GameState)
+
+# Set properties for tests
+set_target_properties(
+        test_utils test_GameState
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+)
+# Copy test data
+file(COPY tests/data DESTINATION "${CMAKE_BINARY_DIR}/tests")
 
 #SET(
 #        COVERAGE_EXCLUDES

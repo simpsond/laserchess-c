@@ -19,4 +19,6 @@ typedef struct StructPlayer {
     char* name;
 } Player;
 
+Player* getPlayerById(player_t id, Player* players, size_t sizePlayers);
+
 #endif //LASER_CHESS_C_PLAYER_H
